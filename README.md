@@ -26,6 +26,13 @@ create table persons (
 );
 ```
 
+## Demonstrating
+
+With the application running, perform a kill -9 of a transaction engine for
+a managed database. In milliseconds the management tier will restart the TE
+and myBatis will retry the transaction successfully. No transactions are
+lost.
+
 ## Issues
 
 1. None.
