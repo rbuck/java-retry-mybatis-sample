@@ -1,3 +1,10 @@
+# java-retry-mybatis-sample
+
+Demonstrates the use of the java-retry library for myBatis transactions.
+The demo uses Spring to define the AOP pointcuts and advice so they're
+not hard-coded nor intrusive. Any Spring-based myBatis application can
+add transaction retry semantics to their DAOs seamlessly without code
+changes.
 
 ## DDL To Load
 
@@ -10,6 +17,4 @@ create table persons (
 
 ## Issues
 
-1. myBatis wraps all exceptions as RuntimeExceptions, and a single type at that.
-   So client side is unable to distinguish directly but must peel back the onion
-   to see the causation.
+1. None.
