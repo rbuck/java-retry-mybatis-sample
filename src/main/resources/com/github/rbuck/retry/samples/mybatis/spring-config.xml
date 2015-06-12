@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+        <property name="driverClassName" value="com.nuodb.jdbc.Driver"/>
+        <property name="jdbcUrl" value="jdbc:com.nuodb://localhost:48004/person?schema=person"/>
+        <property name="username" value="dba"/>
+        <property name="password" value="dba"/>
+        <property name="autoCommit" value="true"/>
+        <property name="readOnly" value="false"/>
+        <property name="connectionTestQuery" value="SELECT 1 FROM DUAL"/>
+        <property name="maximumPoolSize" value="100"/>
+        <property name="maxLifetime" value="120000"/>
+        <property name="isolateInternalQueries" value="true"/>
+        <property name="transactionIsolation" value="TRANSACTION_READ_COMMITTED"/>
+    </bean>
+
+    <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource">
+        <constructor-arg ref="hikariConfig"/>
+    </bean>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:com/github/rbuck/retry/samples/mybatis/config.xml"/>
+    </bean>
+
+    <bean id="personDao" class="com.github.rbuck.retry.samples.dao.PersonDao">
+        <constructor-arg ref="sqlSessionFactory"/>
+    </bean>
+
+    <bean id="retryStrategy" class="com.github.rbuck.retry.ExponentialBackoff"/>
+    <bean id="transientExceptionDetector" class="com.github.rbuck.retry.SqlTransientExceptionDetector"/>
+
+    <bean id="retryPolicy" class="com.github.rbuck.retry.RetryPolicy">
+        <constructor-arg ref="retryStrategy"/>
+        <constructor-arg ref="transientExceptionDetector"/>
+    </bean>
+
+    <bean name="retryAspect" class="com.github.rbuck.retry.samples.aop.MyBatisRetryAspect">
+        <constructor-arg ref="retryPolicy"/>
+    </bean>
+
+    <aop:config>
+        <aop:aspect ref="retryAspect" id="personDaoRetryAspect" order="1">
+            <aop:pointcut expression="execution(* com.github.rbuck.retry.samples.dao.PersonDao.*(..))" id="personDaoPointcut"/>
+            <aop:around method="invoke" pointcut-ref="personDaoPointcut" arg-names="pjp"/>
+        </aop:aspect>
+    </aop:config>
+
+</beans>
