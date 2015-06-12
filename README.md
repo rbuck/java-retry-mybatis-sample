@@ -6,6 +6,17 @@ not hard-coded nor intrusive. Any Spring-based myBatis application can
 add transaction retry semantics to their DAOs seamlessly without code
 changes.
 
+## Database Credentials
+
+A previously created database having the following credentials and name must
+exist:
+
+    database-name: person
+    database-user: dba
+    database-pass: dba
+    database-host: localhost
+    database-port: 48004
+
 ## DDL To Load
 
 ```
