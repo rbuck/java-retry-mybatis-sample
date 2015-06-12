@@ -35,35 +35,41 @@ public class Main {
         PersonDao personDAO = (PersonDao) ctx.getBean("personDao"); // new PersonDao(sessionFactory);
 
         while (true) {
+            try {
 
-            //create person bean to insert
-            Person person = new Person();
+                //create person bean to insert
+                Person person = new Person();
 
-            // insert a person
-            person.setName(createRandomString(20));
-            int id1 = personDAO.insert(person);
+                // insert a person
+                person.setName(createRandomString(20));
+                int id1 = personDAO.insert(person);
 
-            // insert another person
-            person.setName(createRandomString(20));
-            int id2 = personDAO.insert(person);
+                // insert another person
+                person.setName(createRandomString(20));
+                int id2 = personDAO.insert(person);
 
-            // select the second person by id...
-            Person person2 = personDAO.selectById(id2);
+                // select the second person by id...
+                Person person2 = personDAO.selectById(id2);
 
-            // select all persons...
-            List<Person> persons = personDAO.selectAll();
+                // select all persons...
+                List<Person> persons = personDAO.selectAll();
 
-            // update all persons...
-            for (int i = 0; i < persons.size(); i++) {
-                persons.get(i).setName(createRandomString(20) + "_" + i);
-                personDAO.update(persons.get(i));
-            }
+                // update all persons...
+                for (int i = 0; i < persons.size(); i++) {
+                    persons.get(i).setName(createRandomString(20) + "_" + i);
+                    personDAO.update(persons.get(i));
+                }
 
-            // select all persons...
-            persons = personDAO.selectAll();
+                // select all persons...
+                persons = personDAO.selectAll();
 
-            for (Person p : persons) {
-                System.out.println(p);
+                for (Person p : persons) {
+                    System.out.println(p);
+                }
+            } catch (Error e) {
+                throw e;
+            } catch (Throwable t) {
+                // nada
             }
         }
     }

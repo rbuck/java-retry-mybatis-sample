@@ -1,5 +1,7 @@
 package com.github.rbuck.retry.samples.aop;
 
+import com.github.rbuck.retry.RetryEvent;
+import com.github.rbuck.retry.RetryEventListener;
 import com.github.rbuck.retry.RetryPolicy;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -14,6 +16,12 @@ public class MyBatisRetryAspect {
 
     public MyBatisRetryAspect(RetryPolicy<Object> retryPolicy) {
         this.retryPolicy = retryPolicy;
+        this.retryPolicy.addRetryEventListener(new RetryEventListener() {
+            @Override
+            public void onRetry(RetryEvent evt) {
+                System.out.println("BOOM");
+            }
+        });
     }
 
     public Object invoke(final ProceedingJoinPoint pjp) throws Throwable {

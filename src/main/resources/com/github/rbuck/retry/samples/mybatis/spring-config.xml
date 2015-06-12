@@ -12,7 +12,7 @@
         <property name="autoCommit" value="true"/>
         <property name="readOnly" value="false"/>
         <property name="connectionTestQuery" value="SELECT 1 FROM DUAL"/>
-        <property name="maximumPoolSize" value="100"/>
+        <property name="maximumPoolSize" value="12"/>
         <property name="maxLifetime" value="120000"/>
         <property name="isolateInternalQueries" value="true"/>
         <property name="transactionIsolation" value="TRANSACTION_READ_COMMITTED"/>
